@@ -21,3 +21,11 @@ jogos_Santos["datetimeobj"] = jogos_Santos["date"].apply(lambda x : datetime.dat
 plt.plot_date(x=jogos_Santos['datetimeobj'], y=jogos_Santos['gols_santos'], xdate = True, ydate = False, color = 'blue')
 plt.plot_date(x=jogos_Santos['datetimeobj'], y=jogos_Santos['gols_adv'], xdate = True, ydate = False, color = 'red')
 plt.show()
+plt.clf()
+
+plt.hist(jogos_Santos['gols_santos'], bins = range(7), alpha=0.5, label='Gols Santos')
+plt.hist(jogos_Santos['gols_adv'], bins = range(7), alpha=0.5, label='Gols Adv.')
+plt.legend(loc='upper right')
+plt.xticks(range(7))
+plt.show()
+plt.clf()
