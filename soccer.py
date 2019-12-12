@@ -5,6 +5,7 @@ import datetime
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split 
 import math
+import seaborn as sns
 
 jogos = pd.read_csv("spi_matches.csv")
 Santos = jogos[np.logical_or(jogos['team1'] == 'Santos', jogos['team2'] == 'Santos')]
@@ -37,25 +38,28 @@ jogos_Santos["datetimeobj"] = jogos_Santos["date"].apply(lambda x : datetime.dat
 
 plt.plot_date(x=jogos_Santos['datetimeobj'], y=jogos_Santos['gols_santos'], xdate = True, ydate = False, color = 'blue')
 plt.plot_date(x=jogos_Santos['datetimeobj'], y=jogos_Santos['gols_adv'], xdate = True, ydate = False, color = 'red')
-plt.show()
+#plt.show()
 plt.clf()
 
 plt.hist(jogos_Santos['gols_santos'], bins = range(7), alpha=0.5, label='Gols Santos')
 plt.hist(jogos_Santos['gols_adv'], bins = range(7), alpha=0.5, label='Gols Adv.')
 plt.legend(loc='upper right')
 plt.xticks(range(7))
-plt.show()
+#plt.show()
 plt.clf()
-
 
 #Treinando kNeighbors para prever numero de gols
 Santos_predict = jogos_Santos[['gols_santos','prob_Santos', 'importance_Santos', 'spi_Santos', 'local']]
+
+ax = sns.heatmap(Santos_predict.corr(), square=True, cmap='RdYlGn')
+plt.show()
+
 X = Santos_predict.drop('gols_santos', axis=1).values
 y = Santos_predict['gols_santos'].values
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=42)
 
-knn = KNeighborsClassifier(n_neighbors=7)
+knn = KNeighborsClassifier(n_neighbors=4)
 knn.fit(X_test,y_test)
-print(knn.predict(X_train))
-print(knn.score(X_train, y_train))
+print(knn.predict(X_test))
+print(knn.score(X_test, y_test))
